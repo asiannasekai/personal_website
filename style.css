@@ -1,0 +1,718 @@
+:root {
+    --primary-color: #0a0a1a;
+    --secondary-color: #1a1a2a;
+    --accent-color: #00ff9d;
+    --screen-color: #000;
+    --text-color: #fff;
+    --glow-color: rgba(0, 255, 157, 0.5);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', monospace;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    overflow: hidden;
+}
+
+.virtual-machine {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    perspective: 1000px;
+}
+
+.machine-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.screen {
+    position: absolute;
+    width: min(80vw, 800px);
+    height: min(60vh, 600px);
+    background-color: var(--screen-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 5px;
+    overflow: hidden;
+    transform: translateZ(0);
+    box-shadow: 0 0 20px var(--glow-color);
+    animation: screenGlow 2s infinite alternate;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes screenGlow {
+    0% { box-shadow: 0 0 20px var(--glow-color); }
+    100% { box-shadow: 0 0 40px var(--glow-color); }
+}
+
+.screen-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    box-sizing: border-box;
+    font-size: 24px;
+    line-height: 1.5;
+    color: #00ff9d;
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+    z-index: 4;
+    transition: opacity 2s ease;
+}
+
+#emulator-screen {
+    width: 100%;
+    height: 100%;
+    background-color: var(--screen-color);
+}
+
+.keyboard {
+    position: absolute;
+    bottom: 20px;
+    width: min(80vw, 800px);
+    padding: 20px;
+    box-sizing: border-box;
+    transform: translateZ(0);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.function-keys {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.function-keys .key {
+    width: 60px;
+    height: 40px;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    color: var(--text-color);
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.function-keys .key::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--glow-color),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.function-keys .key:hover::before {
+    left: 100%;
+}
+
+.function-keys .key:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--glow-color);
+}
+
+.main-keys {
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    gap: 5px;
+}
+
+.main-keys .key {
+    aspect-ratio: 1;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    color: var(--text-color);
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.main-keys .key::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--glow-color),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.main-keys .key:hover::before {
+    left: 100%;
+}
+
+.main-keys .key:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--glow-color);
+}
+
+.control-panel {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(20vw, 200px);
+    height: min(80vh, 600px);
+    background-color: var(--primary-color);
+    border-left: 2px solid var(--accent-color);
+    padding: 20px;
+    box-sizing: border-box;
+    transform: translateZ(0);
+    box-shadow: -5px 0 20px var(--glow-color);
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.menu-item {
+    padding: 10px;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    color: var(--text-color);
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--glow-color),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.menu-item:hover::before {
+    left: 100%;
+}
+
+.menu-item:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--glow-color);
+}
+
+.status-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.status-item:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--glow-color);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--primary-color);
+    padding: 20px;
+    border-radius: 5px;
+    border: 2px solid var(--accent-color);
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+    box-shadow: 0 0 30px var(--glow-color);
+    animation: modalAppear 0.5s ease-out;
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.loading-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    animation: blink 1s infinite;
+    text-shadow: 0 0 10px var(--glow-color);
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* 3D specific styles */
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Dark mode */
+body.dark-mode {
+    --primary-color: #0a0a1a;
+    --secondary-color: #1a1a2a;
+    --accent-color: #00ff9d;
+    --screen-color: #000;
+    --text-color: #fff;
+    --glow-color: rgba(0, 255, 157, 0.5);
+}
+
+/* Green screen mode */
+.screen.green-screen {
+    --accent-color: #00ff9d;
+    filter: hue-rotate(120deg);
+}
+
+/* Add cyberpunk scanline effect */
+.screen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(0, 255, 157, 0.1) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    animation: scanline 8s linear infinite;
+}
+
+@keyframes scanline {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100%); }
+}
+
+.trippy-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #0a0a1a, #1a1a2a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow: hidden;
+    transition: opacity 1s ease-out;
+    border-radius: 5px;
+}
+
+.green-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 255, 157, 0.3);
+    z-index: 3;
+    transition: opacity 1s ease;
+    pointer-events: none;
+}
+
+.spiral-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.spiral-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    cursor: pointer;
+}
+
+.philosophical-question {
+    position: absolute;
+    color: #00ff9d;
+    font-family: 'Courier New', monospace;
+    font-size: clamp(12px, 1.5vw, 18px);
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+    white-space: nowrap;
+    opacity: 0;
+    animation: fadeInOut 3s infinite;
+    animation-delay: var(--delay);
+    transform-origin: center;
+    will-change: transform, opacity;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+.center-dot {
+    width: 15px;
+    height: 15px;
+    background: #00ff9d;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00ff9d;
+    animation: pulse 2s infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 20px #00ff9d;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        box-shadow: 0 0 40px #00ff9d;
+    }
+}
+
+.trippy-terminal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    color: #00ff9d;
+    font-family: 'Courier New', monospace;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.terminal-content {
+    font-size: 24px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    position: relative;
+    z-index: 4;
+    transition: opacity 2s ease;
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+}
+
+.cursor {
+    display: inline-block;
+    width: 15px;
+    height: 30px;
+    background: #00ff9d;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+    box-shadow: 0 0 10px #00ff9d;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(0, 255, 157, 0.1) 50%
+    );
+    background-size: 100% 4px;
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        0deg,
+        transparent 50%,
+        rgba(0, 255, 157, 0.1) 50%
+    );
+    background-size: 100% 4px;
+    animation: glitch 0.1s infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes glitch {
+    0% { transform: translateY(0); }
+    20% { transform: translateY(-2px); }
+    40% { transform: translateY(2px); }
+    60% { transform: translateY(-1px); }
+    80% { transform: translateY(1px); }
+    100% { transform: translateY(0); }
+}
+
+.trippy-particle {
+    position: absolute;
+    background: #00ff9d;
+    border-radius: 50%;
+    left: var(--x);
+    top: var(--y);
+    width: var(--size);
+    height: var(--size);
+    animation: float 10s infinite;
+    animation-delay: var(--delay);
+    opacity: 0.5;
+    will-change: transform;
+    z-index: 1;
+    box-shadow: 0 0 10px #00ff9d;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.5;
+    }
+    25% {
+        transform: translate(10px, -10px) scale(1.2);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(0, -20px) scale(1);
+        opacity: 0.5;
+    }
+    75% {
+        transform: translate(-10px, -10px) scale(0.8);
+        opacity: 0.2;
+    }
+}
+
+.rainbow-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        #ff0000,
+        #ff7f00,
+        #ffff00,
+        #00ff00,
+        #0000ff,
+        #4b0082,
+        #9400d3
+    );
+    background-size: 400% 400%;
+    animation: rainbow 10s ease infinite;
+    opacity: 0.1;
+    mix-blend-mode: overlay;
+    z-index: 1;
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.distortion-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+
+.distortion-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+}
+
+.fractal-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+
+.fractal-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.computer-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 600px;
+    background: #1a1a1a;
+    border: 20px solid #333;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    z-index: 1;
+}
+
+.yinyang-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.yinyang-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.quantum-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    background: #000;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.quantum-container.visible {
+    opacity: 1;
+}
+
+.quantum-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    mix-blend-mode: screen;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+} 

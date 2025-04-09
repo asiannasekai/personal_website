@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual BBC Micro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/animation/AnimationMixer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbeeb@1.0.0/dist/jsbeeb.min.js"></script>
+</head>
+<body>
+    <div class="virtual-machine">
+        <div class="machine-container">
+            <div class="screen">
+                <div class="screen-content">
+                    <div id="emulator-screen"></div>
+                    <div class="loading-message">Loading VirtualBeeb...</div>
+                </div>
+            </div>
+            <div class="keyboard">
+                <div class="function-keys">
+                    <button class="key" data-key="F0">F0</button>
+                    <button class="key" data-key="F1">F1</button>
+                    <button class="key" data-key="F2">F2</button>
+                    <button class="key" data-key="F3">F3</button>
+                    <button class="key" data-key="F4">F4</button>
+                    <button class="key" data-key="F5">F5</button>
+                    <button class="key" data-key="F6">F6</button>
+                    <button class="key" data-key="F7">F7</button>
+                    <button class="key" data-key="F8">F8</button>
+                    <button class="key" data-key="F9">F9</button>
+                </div>
+                <div class="main-keys">
+                    <!-- Main keyboard layout will be added dynamically -->
+                </div>
+            </div>
+        </div>
+        <div class="control-panel">
+            <div class="menu">
+                <button class="menu-item" data-section="games">Games</button>
+                <button class="menu-item" data-section="display">Display</button>
+                <button class="menu-item" data-section="keys">Keys</button>
+                <button class="menu-item" data-section="about">About</button>
+            </div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="label">cassettemotor</span>
+                    <span class="value">off</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">capslock</span>
+                    <span class="value">off</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">shiftlock</span>
+                    <span class="value">off</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">drive0/2</span>
+                    <span class="value">off</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">drive1/3</span>
+                    <span class="value">off</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">virtualMHz</span>
+                    <span class="value">2</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Windows -->
+    <div class="modal" id="games-modal">
+        <div class="modal-content">
+            <h2>Games</h2>
+            <div class="game-list">
+                <button class="game-item" data-game="chuckie-egg">Chuckie Egg</button>
+                <button class="game-item" data-game="elite">Elite</button>
+                <button class="game-item" data-game="frak">Frak</button>
+                <button class="game-item" data-game="repton">Repton</button>
+                <button class="game-item" data-game="teletext">Teletext Bad Apple</button>
+                <button class="game-item" data-game="search">Search Games Archive</button>
+                <button class="game-item" data-game="local">From examples or local</button>
+            </div>
+            <div class="game-options">
+                <input type="file" id="game-file" accept=".ssd,.dsd" style="display: none;">
+                <button class="load-local">Load local SSD or DSD file</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="display-modal">
+        <div class="modal-content">
+            <h2>Display</h2>
+            <div class="display-options">
+                <label class="option">
+                    <input type="checkbox" id="shadows"> Shadows
+                </label>
+                <label class="option">
+                    <input type="checkbox" id="dark-mode"> Dark mode
+                </label>
+                <label class="option">
+                    <input type="checkbox" id="monitor-focus"> Monitor focus
+                </label>
+                <label class="option">
+                    <input type="checkbox" id="green-screen"> Green Screen
+                </label>
+                <label class="option">
+                    <input type="checkbox" id="unpredictable"> Unpredictable
+                </label>
+                <label class="option">
+                    <input type="checkbox" id="fullscreen"> Fullscreen
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="keys-modal">
+        <div class="modal-content">
+            <h2>Keys</h2>
+            <div class="key-mappings">
+                <h3>Handy key mappings</h3>
+                <table>
+                    <tr>
+                        <th>BBC</th>
+                        <th>PC</th>
+                        <th>OSX</th>
+                    </tr>
+                    <tr>
+                        <td>F0</td>
+                        <td>F10</td>
+                        <td>F10</td>
+                    </tr>
+                    <tr>
+                        <td>BREAK</td>
+                        <td>F12</td>
+                        <td>Right ⌘ + F12</td>
+                    </tr>
+                    <tr>
+                        <td>COPY</td>
+                        <td>End</td>
+                        <td>Right ⌘ + F11</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="about-modal">
+        <div class="modal-content">
+            <h2>About</h2>
+            <p>Virtualbeeb - beta 0.0.1 December 2021</p>
+            <p>An interactive 3D model of the BBC Micro (1981). Choose from 100s of games and experience the sights and sounds of the original hardware. Retrocomputing for the metaverse!</p>
+            <p>Created by Dominic Pajak. Emulator: Matt Godbolt, Shaders: Paul Malin, Models: Ant Mercer</p>
+            <p>This website licensed under CC BY-NC-SA 4.0 and provided without warranty of any kind.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="quantum_art.js"></script>
+</body>
+</html> 
